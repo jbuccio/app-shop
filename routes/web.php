@@ -11,10 +11,31 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', 'TestController@welcome');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/products/{id}', 'ProductController@show'); //
+
+Route::post('/cart', 'CartDetailController@store'); //
+Route::delete('/cart', 'CartDetailController@destroy'); //
+Route::post('/order', 'CartController@update'); //
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->namespace('Admin')->group(function () {
+  Route::get('/products', 'ProductController@index'); //listado de productos
+  Route::get('/products/create', 'ProductController@create'); //crear producto
+  Route::post('/products', 'ProductController@store'); //guardar o registrar producto
+  Route::get('/products/{id}/edit', 'ProductController@edit'); //editar producto
+  Route::post('/products/{id}/edit', 'ProductController@update'); //actualizar producto
+  Route::delete('/products/{id}', 'ProductController@destroy'); //eliminar producto
+
+  Route::get('/products/{id}/images', 'ImageController@index'); //listado de imagenes de producto
+  Route::post('/products/{id}/images', 'ImageController@store'); //guardar imagenes de producto
+  Route::delete('/products/{id}/images', 'ImageController@destroy'); //eliminar imagenes de producto
+  Route::get('/products/{id}/images/select/{image}', 'ImageController@select'); //destacar imagenes de producto
+});
